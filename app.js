@@ -3,6 +3,18 @@ const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
 const restaurantList = require('./restaurant.json')
+const mongoose = require('mongoose')
+if(process.env.NODE_ENV !=='production'){
+    require('dotenv').config()
+}
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+const db = mongoose.connection
+db.on('error',()=>{
+    console.log('mongodb error!')
+})
+db.once('open',()=>{
+    console.log('mongodb connected!')
+})
 // set template engine
 app.engine('handlebars',exphbs.engine({defaultLayout:'main'}))
 app.set('view engine','handlebars')
@@ -24,7 +36,7 @@ app.get('/restaurants/:restaurant_id',(req,res)=>{
 app.get('/search',(req,res)=>{
     const keyword = req.query.keyword //查詢字串
     const filteredRestaurant = restaurantList.results.filter(restaurant=>{
-        return restaurant.name.toLowerCase().includes(keyword.toLowerCase())
+        return restaurant.name.toLowerCase().includes(keyword.toLowerCase())|| restaurant.category.toLowerCase().includes(keyword.toLowerCase())
     }) 
     res.render('index',{restaurants:filteredRestaurant,keyword:keyword})
 })
