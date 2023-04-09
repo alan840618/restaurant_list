@@ -12,10 +12,10 @@ app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 // set static file
 app.use(express.static('public'))
-//route setting
+// route setting
 // index page
 app.use(methodOverride('_method'))
 app.use(routes)
-app.listen(port,()=>{
-    console.log(`Express is listening on localhost:${port}`)
+app.listen(port, () => {
+  console.log(`Express is listening on localhost:${port}`)
 })
